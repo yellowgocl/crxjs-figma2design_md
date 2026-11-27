@@ -1,0 +1,27 @@
+﻿node.exe : $ wxt build
+所在位置 C:\nvm4w\nodejs\pnpm.ps1:16 字符: 5
++     & "$basedir/node$exe"  "$basedir/node_modules/corepack/dist/pnpm. ...
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ($ wxt build:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+WXT 0.21.5
+[36m鈩?[39m Building chrome-mv3 for production with Vite 8.3.8
+[?25l
+鉅?Preparing...[K
+鉅?[1/2] background[K
+鉅?[1/2] background[K
+鉅?[2/2] sidepanel[K
+鉅?[2/2] sidepanel[K
+鉅?[2/2] sidepanel[K
+鉅?[2/2] sidepanel[K
+[K[?25h
+[K[?25h[32m鉁?[39m Built extension in 466 ms
+  鈹溾攢 .output\chrome-mv3\manifest.json                  361 B    
+  鈹溾攢 .output\chrome-mv3\sidepanel.html                 411 B    
+  鈹溾攢 .output\chrome-mv3\background.js                  95.95 kB 
+  鈹溾攢 .output\chrome-mv3\chunks\sidepanel-DUxorg5L.js   342.26 kB
+  鈹斺攢 .output\chrome-mv3\assets\sidepanel-B_VHg661.css  7.16 kB  
+危 Total size: 446.15 kB                              
+[32m鉁?[39m Finished in 696 ms

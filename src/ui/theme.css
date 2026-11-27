@@ -1,0 +1,15 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-surface: #ffffff;
+  --color-subtle: #f4f4f5;
+  --color-ink: #18181b;
+  --color-muted: #52525b;
+  --color-line: #e4e4e7;
+  --color-accent: #2563eb;
+  --color-danger: #b91c1c;
+  --font-sans: ui-sans-serif, system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
+}
+
+html, body { min-width: 320px; }
