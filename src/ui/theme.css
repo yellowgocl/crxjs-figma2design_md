@@ -8,6 +8,7 @@
   --color-line: #e4e4e7;
   --color-accent: #2563eb;
   --color-danger: #b91c1c;
+  --color-warn: #92400e;
   --font-sans: ui-sans-serif, system-ui, 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --font-mono: ui-monospace, 'SF Mono', Consolas, monospace;
 }

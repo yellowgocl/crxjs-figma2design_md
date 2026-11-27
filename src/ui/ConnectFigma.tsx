@@ -25,7 +25,7 @@ export function ConnectFigma({ expired = false }: { expired?: boolean }) {
         <h2 className="text-base font-semibold">连接 Figma</h2>
         <p className="mt-1 text-sm text-muted">
           在 Figma 的 Settings → Security → Personal access tokens 生成 Token。
-          需要勾选 current_user:read、file_content:read、library_content:read、library_assets:read（企业版可加 file_variables:read），并设置过期时间。
+          需要勾选 current_user:read、file_content:read、file_metadata:read、file_versions:read、library_content:read、library_assets:read（企业版可加 file_variables:read），并设置过期时间。
         </p>
       </div>
 

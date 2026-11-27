@@ -1,0 +1,147 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildPageIR > matches snapshot 1`] = `
+{
+  "custom": [
+    {
+      "name": "custom-color-1",
+      "path": [
+        "custom",
+        "color",
+      ],
+      "source": "derived",
+      "type": "color",
+      "usage": 1,
+      "value": "#666666",
+    },
+    {
+      "name": "custom-color-2",
+      "path": [
+        "custom",
+        "color",
+      ],
+      "source": "derived",
+      "type": "color",
+      "usage": 1,
+      "value": "#FAFAFA",
+    },
+    {
+      "name": "custom-text-1",
+      "path": [
+        "custom",
+        "typography",
+      ],
+      "source": "derived",
+      "type": "typography",
+      "usage": 1,
+      "value": {
+        "fontFamily": "Inter",
+        "fontSize": 13,
+        "fontWeight": 500,
+        "letterSpacing": "0px",
+        "lineHeight": "18px",
+      },
+    },
+    {
+      "name": "spacing-24",
+      "path": [
+        "spacing",
+        "24",
+      ],
+      "source": "derived",
+      "type": "spacing",
+      "usage": 1,
+      "value": 24,
+    },
+    {
+      "name": "spacing-32",
+      "path": [
+        "spacing",
+        "32",
+      ],
+      "source": "derived",
+      "type": "spacing",
+      "usage": 1,
+      "value": 32,
+    },
+  ],
+  "kind": "page",
+  "libraries": [
+    {
+      "fileKey": "LIB123",
+      "name": "VI Library",
+    },
+  ],
+  "source": {
+    "extractedAt": "2026-11-27T05:00:00Z",
+    "fileKey": "PAGE456",
+    "fileName": "Checkout",
+    "lastModified": "2026-11-25T10:00:00Z",
+    "nodeId": "10:1",
+    "versionId": "200",
+    "versionLabel": null,
+  },
+  "tree": {
+    "children": [
+      {
+        "name": "Title",
+        "text": "确认订单",
+        "tokens": [
+          "text-body",
+        ],
+        "type": "TEXT",
+      },
+      {
+        "name": "Note",
+        "text": "本页自定义的说明文字",
+        "type": "TEXT",
+      },
+      {
+        "component": "Button",
+        "name": "Pay",
+        "type": "INSTANCE",
+        "variant": "State=Default",
+      },
+      {
+        "component": "Button",
+        "name": "Cancel",
+        "type": "INSTANCE",
+        "variant": "State=Hover",
+      },
+      {
+        "component": "Button",
+        "name": "Pay 2",
+        "type": "INSTANCE",
+        "variant": "State=Default",
+      },
+    ],
+    "layout": "column",
+    "name": "Checkout",
+    "type": "FRAME",
+  },
+  "usedComponents": [
+    {
+      "count": 3,
+      "key": "cs-button",
+      "libraryFileKey": "LIB123",
+      "name": "Button",
+      "remote": true,
+      "variants": [
+        "State=Default",
+        "State=Hover",
+      ],
+    },
+  ],
+  "usedStyles": [
+    {
+      "count": 1,
+      "key": "sk-body",
+      "libraryFileKey": "LIB123",
+      "name": "text-body",
+      "remote": true,
+      "type": "typography",
+    },
+  ],
+  "warnings": [],
+}
+`;

@@ -15,7 +15,9 @@
 | 本地模型 | Chrome 内置 Gemini Nano（Prompt API `LanguageModel`） |
 | Token 存储 | `@wxt-dev/storage`，用户可选"仅本次会话"或"记住 Token" |
 | 设计库 | 两层模式：VI 库生成基础层 `DESIGN.foundation.md`，产品页面生成页面层 `DESIGN.<page>.md`，页面层只引用基础层 |
-| PAT scopes | `current_user:read`、`file_content:read`、`library_content:read`、`library_assets:read`；`file_variables:read` 仅 Enterprise 可见，可选 |
+| PAT scopes | `current_user:read`、`file_content:read`、`file_metadata:read`、`file_versions:read`、`library_content:read`、`library_assets:read`；`file_variables:read` 仅 Enterprise 可见，可选 |
+| 版本标记 | 每份 DESIGN.md 记录 Figma 版本；生成前可选版本；用 `/meta` 做过期检测 |
+| 状态 | 已确认（2026-11-27）；第一阶段基线见 `branches/stage1-m1/AGENT.md`，v1 之后的需求见 `ROADMAP.md` |
 
 ## 3. 核心链路
 1. 用户填入 Figma Personal Access Token，并选择保存方式
@@ -29,7 +31,14 @@
    - `GET /v1/files/:key/variables/local`：仅 Enterprise；返回 403 时自动降级
    - `GET /v1/files/:key/components`、`/component_sets`：库文件的组件和变体定义
    - `GET /v1/components/:key`、`/v1/styles/:key`（`library_assets:read`）：由页面里的引用 key 追溯到所属库文件
-   - 以上接口和 scope 的对应关系在 M2 开始前用官方文档核实
+   - `GET /v1/files/:key/meta`（`file_metadata:read`）：轻量获取 `version`、`lastModified`，用于过期检测
+   - `GET /v1/files/:key/versions`（`file_versions:read`）：版本历史，供用户选择版本
+   - 读文件类接口带 `?version=<id>` 以固定到所选版本
+   - 接口和 scope 已于 2026-11-27 按官方文档核实（developers.figma.com/docs/rest-api）：
+     `/nodes`、`?version=` → file_content:read；`/meta` → file_metadata:read；`/versions` → file_versions:read；
+     `/files/:key/styles|components|component_sets` → library_content:read（必须是主文件 key，分支不行）；
+     `/components/:key`、`/component_sets/:key`、`/styles/:key` → library_assets:read；
+     `/variables/local` → file_variables:read（仅 Enterprise）
 4. 归一化层（纯函数）：Figma JSON → `DesignIR`，分两层：
    - `LibraryIR`：token 名称和分组、数值、组件定义（变体、属性、状态对应的 token）
    - `PageIR`：页面结构、使用了哪些库组件和 token（按名称引用）、本页自定义样式
@@ -44,7 +53,11 @@
 ## 3.1 设计库两层模式
 - **引用解析**：页面节点上的样式和组件实例带有库 key；通过 key 找到库文件，读取 token 名称和组件定义
 - **匹配规则**：页面层的数值能匹配基础层 token 时，写 token 名；匹配不上的标成"本页自定义"，提示偏离规范
-- **基础层版本**：`DESIGN.foundation.md` 的 Meta 里记录库文件 key 和 `lastModified`；页面层记录它引用的基础层版本，库更新后提示重新生成
+- **版本标记**：
+  - Meta 记录 `version_id`、`version_label`（设计师命名的版本，没有则为空）、`last_modified`、`generated_at`
+  - 生成前可选版本：默认"最新"，也可选设计师命名过的版本；基础层建议固定到正式发布版
+  - 页面层记录它引用的基础层 `version_id`
+- **过期检测**：打开插件或关联基础层时调用 `/meta` 比较 `version`；不一致则提示"已更新到 X，当前基于 Y"，并提供重新生成
 - **降级**：
   - 没有库文件权限 → 只用节点上的实际数值，token 名自动生成，并提示用户
   - 未关联基础层 → 页面层退化为独立文档（包含数值）
@@ -92,6 +105,7 @@
 - Vitest（单元测试和快照测试）、ESLint + Prettier
 
 ## 8. 开发规范
+- 日常开发用 `pnpm dev`（HMR）；`pnpm build` 只用于打包验证和发布；dev 浏览器资料目录由 `web-ext.config.ts` 固定在 `.wxt/chrome-data`
 - 归一化层和适配层必须是纯函数，并有快照测试：同样的输入必须得到同样的输出
 - 只能把 `DesignIR` 发给 AI，不能发原始 Figma JSON
 - 每次调用 AI 前先估算 token（`measureInputUsage`），超出限制就按组件分块
@@ -141,26 +155,44 @@ flowchart LR
   D --> E[生成和预览]
   A -- AI 不可用 --> T[标记为模板模式] --> B
 ```
-- 第一次使用走完整流程；Token 已保存时直接从"选择来源"开始
+- 第一次使用走完整流程
+- 启动时若有已存 Token，先自动调用 `/v1/me` 验证，验证期间只显示加载状态，不渲染连接页：
+  - 通过 → 跳过连接页，直接进入"选择来源"
+  - 403（过期或撤销）→ 清除 Token，回到连接页并说明原因
+  - 断网 / 429 / 5xx → 保留 Token，显示"重试"和"换一个 Token"，不退回连接页
 - "连接 Figma"一步包含：保存方式选择、只读 PAT 生成引导、验证结果
 - 向导顶部一直显示当前模式（AI / 模板）和连接状态，可随时断开
 
 ## 12. DESIGN.md 输出结构
+### 12.0 Meta 格式（三种文档通用）
+```yaml
+source:
+  file: VI Library (abc123)
+  version_id: "4567890123"
+  version_label: "v2.1 品牌色更新"
+  last_modified: 2026-11-20T08:30:00Z
+foundation:            # 仅页面层
+  version_id: "4567890123"
+generated_at: 2026-11-27T12:10:00+08:00
+css: tailwind-v4
+mode: ai | template
+```
+
 ### 12.1 基础层 `DESIGN.foundation.md`
-1. Meta：库文件、`lastModified`、生成时间、CSS 方案、生成模式
+1. Meta（见 12.0）
 2. Design Tokens（带库里的名称和分组）
 3. Tailwind v4 `@theme` 配置代码 + 安装步骤
 4. 组件规格：变体、属性、各状态对应的 token
 5. AI 使用规则：只能使用这里定义的 token 和组件
 
 ### 12.2 页面层 `DESIGN.<page>.md`
-1. Meta：来源文件、节点、引用的基础层版本
+1. Meta（见 12.0，含 `foundation.version_id`）
 2. 页面结构：用了哪些组件（按名称引用）、布局
 3. 本页自定义：基础层没有的样式，并标明偏离
 4. AI 使用规则：先读基础层，再按本页组合
 
 ### 12.3 独立模式（未关联基础层）
-1. Meta：来源文件、节点、生成时间、CSS 方案、生成模式
+1. Meta（见 12.0）
 2. Design Tokens：颜色 / 字体 / 间距 / 圆角 / 阴影
 3. Tailwind v4 `@theme` 配置代码
 4. 安装和配置步骤（pnpm add tailwindcss @tailwindcss/vite …）
@@ -169,8 +201,8 @@ flowchart LR
 
 ## 13. 里程碑
 - M1：WXT 脚手架、storage / platform / messaging 抽象、Token 设置、Figma 连接验证
-- M2：链接解析、Figma 拉取、LibraryIR / PageIR 归一化、库引用追溯、快照测试
+- M2：链接解析、Figma 拉取、版本读取与选择、LibraryIR / PageIR 归一化、库引用追溯、快照测试（代码已完成，待本地验证）
 - M3：Tailwind v4 适配器 + template provider 输出（基础层、页面层、独立模式）
 - M4：chrome-builtin provider（环境检查、分块、prompt）
-- M5：预览 / 复制 / 下载、UX 打磨、E2E
-- 后续：Firefox 构建 → Safari 转换 → 更多 CSS 方案
+- M5：预览 / 复制 / 下载、过期检测提示、UX 打磨、E2E
+- 后续：见 `ROADMAP.md`

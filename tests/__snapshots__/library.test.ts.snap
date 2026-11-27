@@ -1,0 +1,187 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`buildLibraryIR > matches snapshot 1`] = `
+{
+  "components": [
+    {
+      "description": "主要按钮",
+      "key": "cs-button",
+      "name": "Button",
+      "properties": {
+        "Has icon": [
+          "true",
+          "false",
+        ],
+        "State": [
+          "Default",
+          "Hover",
+        ],
+      },
+      "tokens": [
+        "brand-primary",
+        "elevation-1",
+        "text-body",
+      ],
+      "variants": [
+        {
+          "name": "State=Default",
+          "tokens": [
+            "brand-primary",
+            "text-body",
+          ],
+          "values": {
+            "State": "Default",
+          },
+        },
+        {
+          "name": "State=Hover",
+          "tokens": [
+            "brand-primary",
+            "elevation-1",
+            "text-body",
+          ],
+          "values": {
+            "State": "Hover",
+          },
+        },
+      ],
+    },
+    {
+      "key": "c-icon",
+      "name": "Icon/Close",
+      "properties": {},
+      "tokens": [],
+      "variants": [],
+    },
+  ],
+  "kind": "library",
+  "source": {
+    "extractedAt": "2026-11-27T05:00:00Z",
+    "fileKey": "LIB123",
+    "fileName": "VI Library",
+    "lastModified": "2026-11-20T08:30:00Z",
+    "versionId": "100",
+    "versionLabel": "v2.1",
+  },
+  "tokens": [
+    {
+      "description": "主色",
+      "key": "sk-primary",
+      "name": "brand-primary",
+      "path": [
+        "Brand",
+        "Primary",
+      ],
+      "source": "style",
+      "type": "color",
+      "value": "#2563EB",
+    },
+    {
+      "modes": {
+        "Dark": "#1A1A1A",
+        "Light": "#000000",
+      },
+      "name": "semantic-bg-inverse",
+      "path": [
+        "Semantic",
+        "bg",
+        "inverse",
+      ],
+      "source": "variable",
+      "type": "color",
+      "value": "#000000",
+    },
+    {
+      "modes": {
+        "Dark": "{semantic-bg-inverse}",
+        "Light": "#FFFFFF",
+      },
+      "name": "semantic-bg-surface",
+      "path": [
+        "Semantic",
+        "bg",
+        "surface",
+      ],
+      "source": "variable",
+      "type": "color",
+      "value": "#FFFFFF",
+    },
+    {
+      "key": "sk-body",
+      "name": "text-body",
+      "path": [
+        "Text",
+        "Body",
+      ],
+      "source": "style",
+      "type": "typography",
+      "value": {
+        "fontFamily": "Inter",
+        "fontSize": 16,
+        "fontWeight": 400,
+        "letterSpacing": "0px",
+        "lineHeight": "24px",
+      },
+    },
+    {
+      "key": "sk-shadow",
+      "name": "elevation-1",
+      "path": [
+        "Elevation",
+        "1",
+      ],
+      "source": "style",
+      "type": "effect",
+      "value": "0px 2px 4px 0px #0000001A",
+    },
+    {
+      "name": "radius-4",
+      "path": [
+        "radius",
+        "4",
+      ],
+      "source": "derived",
+      "type": "radius",
+      "usage": 1,
+      "value": 4,
+    },
+    {
+      "name": "radius-8",
+      "path": [
+        "radius",
+        "8",
+      ],
+      "source": "derived",
+      "type": "radius",
+      "usage": 2,
+      "value": 8,
+    },
+    {
+      "name": "spacing-8",
+      "path": [
+        "spacing",
+        "8",
+      ],
+      "source": "derived",
+      "type": "spacing",
+      "usage": 2,
+      "value": 8,
+    },
+    {
+      "name": "spacing-16",
+      "path": [
+        "spacing",
+        "16",
+      ],
+      "source": "derived",
+      "type": "spacing",
+      "usage": 2,
+      "value": 16,
+    },
+  ],
+  "warnings": [
+    "1 个样式没有提取（渐变、图片填充、栅格等暂不支持）",
+    "1 个 Variables 没有提取（字符串、布尔或无法判断用途的数值）",
+  ],
+}
+`;

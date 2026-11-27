@@ -3,6 +3,7 @@ import { api } from '@/src/messaging/client';
 import { ConnectFigma } from '@/src/ui/ConnectFigma';
 import { StatusBar } from '@/src/ui/StatusBar';
 import { Reconnecting } from '@/src/ui/Reconnecting';
+import { SourcePicker } from '@/src/ui/SourcePicker';
 
 /**
  * 启动时先用已存 Token 自动验证：
@@ -25,12 +26,7 @@ export function App() {
         {status.isError && <p className="text-sm text-danger">{status.error.message}</p>}
         {s?.unreachable && <Reconnecting onRetry={() => status.refetch()} retrying={status.isFetching} />}
         {s && !s.connected && !s.unreachable && <ConnectFigma expired={s.reason === 'expired'} />}
-        {s?.connected && (
-          <section>
-            <h2 className="text-base font-semibold">选择来源</h2>
-            <p className="mt-1 text-sm text-muted">下一阶段（M2）在这里粘贴 Figma 链接。</p>
-          </section>
-        )}
+        {s?.connected && <SourcePicker />}
       </div>
     </main>
   );

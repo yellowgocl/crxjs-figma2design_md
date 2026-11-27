@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { Request } from '@/src/messaging/protocol';
+import { AuthStatus, Request } from '@/src/messaging/protocol';
 
 describe('message protocol', () => {
   it('rejects unknown messages', () => {
@@ -7,5 +7,8 @@ describe('message protocol', () => {
   });
   it('rejects too-short tokens', () => {
     expect(Request.safeParse({ type: 'auth/connect', token: 'x', mode: 'session' }).success).toBe(false);
+  });
+  it('defaults unreachable to false', () => {
+    expect(AuthStatus.parse({ connected: true, mode: 'remember', user: null }).unreachable).toBe(false);
   });
 });
